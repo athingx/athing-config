@@ -15,6 +15,8 @@ import org.slf4j.LoggerFactory;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
+import static io.github.athingx.athing.thing.api.util.CompletableFutureUtils.whenCompleted;
+
 /**
  * 设备配置实现
  */
@@ -56,7 +58,7 @@ public class ThingConfigImpl implements ThingConfig {
                         "/sys/%s/thing/config/get".formatted(thing.path().toURN()),
                         new Pull(thing.op().genToken())
                 )
-                .whenComplete(CompletableFutureUtils.whenCompleted(
+                .whenComplete(whenCompleted(
                         (v) -> logger.debug("{}/config/fetch success, scope={};config-id={};", thing.path(), scope, v.data().getConfigId()),
                         (ex) -> logger.warn("{}/config/fetch failure, scope={}", thing.path(), scope)
                 ));
