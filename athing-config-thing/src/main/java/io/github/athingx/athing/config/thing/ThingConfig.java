@@ -4,6 +4,9 @@ import io.github.athingx.athing.thing.api.op.OpReply;
 
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * 设备配置
+ */
 public interface ThingConfig {
 
     /**

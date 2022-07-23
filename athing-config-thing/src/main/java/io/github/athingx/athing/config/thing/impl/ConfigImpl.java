@@ -1,8 +1,8 @@
 package io.github.athingx.athing.config.thing.impl;
 
 import io.github.athingx.athing.config.thing.Config;
-import io.github.athingx.athing.config.thing.builder.ThingConfigOption;
 import io.github.athingx.athing.config.thing.Scope;
+import io.github.athingx.athing.config.thing.builder.ThingConfigOption;
 import io.github.athingx.athing.config.thing.impl.domain.Meta;
 import io.github.athingx.athing.config.thing.impl.util.HttpUtils;
 import io.github.athingx.athing.config.thing.impl.util.StringUtils;
@@ -14,6 +14,9 @@ import java.util.concurrent.CompletableFuture;
 
 import static io.github.athingx.athing.thing.api.util.CompletableFutureUtils.tryCatchExecute;
 
+/**
+ * 配置实现
+ */
 public class ConfigImpl implements Config {
 
     private final Meta meta;

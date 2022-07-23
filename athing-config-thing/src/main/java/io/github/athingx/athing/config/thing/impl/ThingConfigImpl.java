@@ -15,6 +15,9 @@ import org.slf4j.LoggerFactory;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * 设备配置实现
+ */
 public class ThingConfigImpl implements ThingConfig {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());

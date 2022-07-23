@@ -1,5 +1,8 @@
 package io.github.athingx.athing.config.thing.builder;
 
+/**
+ * 设备配置参数
+ */
 public class ThingConfigOption {
 
     /**

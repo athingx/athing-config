@@ -4,6 +4,9 @@ import com.google.gson.annotations.SerializedName;
 import io.github.athingx.athing.config.thing.Scope;
 import io.github.athingx.athing.thing.api.op.OpData;
 
+/**
+ * 拉取配置
+ */
 public class Pull implements OpData {
 
     @SerializedName("id")
@@ -15,6 +18,11 @@ public class Pull implements OpData {
     @SerializedName("params")
     private final Param param;
 
+    /**
+     * 拉取配置
+     *
+     * @param token 令牌
+     */
     public Pull(String token) {
         this.token = token;
         this.version = "1.0";
