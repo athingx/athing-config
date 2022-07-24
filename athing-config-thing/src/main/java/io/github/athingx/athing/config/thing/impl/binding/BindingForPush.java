@@ -7,6 +7,7 @@ import io.github.athingx.athing.config.thing.impl.ConfigImpl;
 import io.github.athingx.athing.config.thing.impl.domain.Push;
 import io.github.athingx.athing.thing.api.Thing;
 import io.github.athingx.athing.thing.api.op.OpBinder;
+import io.github.athingx.athing.thing.api.op.OpBinding;
 import io.github.athingx.athing.thing.api.op.OpGroupBind;
 import io.github.athingx.athing.thing.api.op.OpReply;
 import org.slf4j.Logger;
@@ -20,7 +21,7 @@ import static io.github.athingx.athing.thing.api.function.ThingFnMapJson.mapping
 import static io.github.athingx.athing.thing.api.function.ThingFnMapJson.mappingJsonToType;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public class BindingForPush implements BindingFor<OpBinder>, Codes {
+public class BindingForPush implements OpBinding<OpBinder>, Codes {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final Thing thing;

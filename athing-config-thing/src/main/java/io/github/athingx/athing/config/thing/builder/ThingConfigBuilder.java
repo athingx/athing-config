@@ -58,9 +58,9 @@ public class ThingConfigBuilder {
             listeners.add(listener);
         }
 
-        new BindingForPush(thing, option, listeners).binding(group);
-        final var pullCallerFuture = new BindingForPull(thing, option).binding(group);
-
+        group.binding(new BindingForPush(thing, option, listeners));
+        final var pullCallerFuture = group.binding(new BindingForPull(thing, option));
+        
         return group
                 .commit()
                 .thenCompose(binder -> tryCatchCompleted(() -> new ThingConfigImpl(
