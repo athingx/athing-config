@@ -14,9 +14,7 @@ import io.github.athingx.athing.thing.api.op.OpReply;
 import java.util.concurrent.CompletableFuture;
 
 import static io.github.athingx.athing.config.thing.Scope.PRODUCT;
-import static io.github.athingx.athing.thing.api.function.ThingFnMap.identity;
-import static io.github.athingx.athing.thing.api.function.ThingFnMapJson.mappingJsonFromBytes;
-import static io.github.athingx.athing.thing.api.function.ThingFnMapOpReply.mappingOpReplyFromJson;
+import static io.github.athingx.athing.thing.api.function.ThingFn.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class BindingForPull implements OpBinding<OpCaller<Pull, OpReply<Config>>> {
@@ -32,8 +30,8 @@ public class BindingForPull implements OpBinding<OpCaller<Pull, OpReply<Config>>
     @Override
     public CompletableFuture<OpCaller<Pull, OpReply<Config>>> binding(OpGroupBind group) {
         return group.bind("/sys/%s/thing/config/get_reply".formatted(thing.path().toURN()))
-                .map(mappingJsonFromBytes(UTF_8))
-                .map(mappingOpReplyFromJson(Meta.class))
+                .map(mappingJsonFromByte(UTF_8))
+                .map(mappingJsonToOpReply(Meta.class))
                 .map((topic, reply) -> OpReply.reply(
                         reply.token(),
                         reply.code(),

@@ -34,7 +34,7 @@ public interface ThingConfig {
      * 拉取最新配置
      *
      * @param scope 配置范围
-     * @return 配置Future
+     * @return 拉取操作
      */
     CompletableFuture<OpReply<Config>> fetch(Scope scope);
 

@@ -17,8 +17,8 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 import static io.github.athingx.athing.config.thing.Scope.PRODUCT;
-import static io.github.athingx.athing.thing.api.function.ThingFnMapJson.mappingJsonFromBytes;
-import static io.github.athingx.athing.thing.api.function.ThingFnMapJson.mappingJsonToType;
+import static io.github.athingx.athing.thing.api.function.ThingFn.mappingJsonFromByte;
+import static io.github.athingx.athing.thing.api.function.ThingFn.mappingJsonToType;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class BindingForPush implements OpBinding<OpBinder>, Codes {
@@ -37,7 +37,7 @@ public class BindingForPush implements OpBinding<OpBinder>, Codes {
     @Override
     public CompletableFuture<OpBinder> binding(OpGroupBind group) {
         return group.bind("/sys/%s/thing/config/push".formatted(thing.path().toURN()))
-                .map(mappingJsonFromBytes(UTF_8))
+                .map(mappingJsonFromByte(UTF_8))
                 .map(mappingJsonToType(Push.class))
                 .bind((topic, push) -> {
 
@@ -47,6 +47,9 @@ public class BindingForPush implements OpBinding<OpBinder>, Codes {
                     final var token = push.token();
                     final var configId = push.meta().configId();
 
+                    // received
+                    logger.debug("{}/config/push received, token={};config-id={};", path, token, configId);
+
                     // 如果没配置监听器，则返回配置失败
                     if (listeners.isEmpty()) {
                         logger.warn("{}/config/push give up: none-listener, token={};config-id={};", path, token, configId);
@@ -55,6 +58,7 @@ public class BindingForPush implements OpBinding<OpBinder>, Codes {
                                 ALINK_REPLY_PROCESS_ERROR,
                                 "none-listener"
                         ));
+                        return;
                     }
 
                     // 如果有配置监听器，则进行监听

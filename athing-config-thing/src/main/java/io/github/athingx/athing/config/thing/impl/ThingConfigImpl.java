@@ -8,14 +8,13 @@ import io.github.athingx.athing.config.thing.impl.domain.Pull;
 import io.github.athingx.athing.thing.api.Thing;
 import io.github.athingx.athing.thing.api.op.OpCaller;
 import io.github.athingx.athing.thing.api.op.OpReply;
-import io.github.athingx.athing.thing.api.util.CompletableFutureUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
-import static io.github.athingx.athing.thing.api.util.CompletableFutureUtils.whenCompleted;
+import static io.github.athingx.athing.thing.api.function.CompletableFutureFn.whenCompleted;
 
 /**
  * 设备配置实现

@@ -12,7 +12,7 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
-import static io.github.athingx.athing.thing.api.util.CompletableFutureUtils.tryCatchExecute;
+import static io.github.athingx.athing.thing.api.function.CompletableFutureFn.tryCatchExecute;
 
 /**
  * 配置实现

@@ -12,7 +12,7 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static io.github.athingx.athing.thing.api.util.CompletableFutureUtils.tryCatchCompleted;
+import static io.github.athingx.athing.thing.api.function.CompletableFutureFn.tryCatchComplete;
 
 /**
  * 设备配置构造
@@ -63,7 +63,7 @@ public class ThingConfigBuilder {
         
         return group
                 .commit()
-                .thenCompose(binder -> tryCatchCompleted(() -> new ThingConfigImpl(
+                .thenCompose(binder -> tryCatchComplete(() -> new ThingConfigImpl(
                         thing,
                         listeners,
                         pullCallerFuture.get()

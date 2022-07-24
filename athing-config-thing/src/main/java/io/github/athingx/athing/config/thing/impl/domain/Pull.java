@@ -35,18 +35,6 @@ public class Pull implements OpData {
         return token;
     }
 
-    public String version() {
-        return version;
-    }
-
-    public String method() {
-        return method;
-    }
-
-    public Param param() {
-        return param;
-    }
-
     private record Param(
             @SerializedName("configScope") String scope,
             @SerializedName("getType") String type
