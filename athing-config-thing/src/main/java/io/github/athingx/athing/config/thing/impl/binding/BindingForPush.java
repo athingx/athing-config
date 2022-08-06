@@ -6,9 +6,9 @@ import io.github.athingx.athing.config.thing.impl.Codes;
 import io.github.athingx.athing.config.thing.impl.ConfigImpl;
 import io.github.athingx.athing.config.thing.impl.domain.Push;
 import io.github.athingx.athing.thing.api.Thing;
-import io.github.athingx.athing.thing.api.op.OpBinder;
-import io.github.athingx.athing.thing.api.op.OpBinding;
-import io.github.athingx.athing.thing.api.op.OpGroupBind;
+import io.github.athingx.athing.thing.api.op.OpBind;
+import io.github.athingx.athing.thing.api.op.OpGroupBindFor;
+import io.github.athingx.athing.thing.api.op.OpGroupBinding;
 import io.github.athingx.athing.thing.api.op.OpReply;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +21,7 @@ import static io.github.athingx.athing.thing.api.function.ThingFn.mappingJsonFro
 import static io.github.athingx.athing.thing.api.function.ThingFn.mappingJsonToType;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public class BindingForPush implements OpBinding<OpBinder>, Codes {
+public class BindingForPush implements OpGroupBindFor<OpBind>, Codes {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final Thing thing;
@@ -35,8 +35,8 @@ public class BindingForPush implements OpBinding<OpBinder>, Codes {
     }
 
     @Override
-    public CompletableFuture<OpBinder> binding(OpGroupBind group) {
-        return group.bind("/sys/%s/thing/config/push".formatted(thing.path().toURN()))
+    public CompletableFuture<OpBind> bindFor(OpGroupBinding group) {
+        return group.binding("/sys/%s/thing/config/push".formatted(thing.path().toURN()))
                 .map(mappingJsonFromByte(UTF_8))
                 .map(mappingJsonToType(Push.class))
                 .bind((topic, push) -> {
@@ -63,11 +63,12 @@ public class BindingForPush implements OpBinding<OpBinder>, Codes {
 
                     // 如果有配置监听器，则进行监听
                     try {
-
                         listeners.forEach(listener -> listener.apply(config));
-                        logger.warn("{}/config/push apply success, token={};config-id={};", path, token, configId);
-                        thing.op().data(rTopic, OpReply.success(token));
-
+                        logger.debug("{}/config/push apply success, token={};config-id={};", path, token, configId);
+                        thing.op().data(
+                                rTopic,
+                                OpReply.success(token)
+                        );
                     } catch (Throwable cause) {
                         logger.warn("{}/config/push apply failure, token={};config-id={};", path, token, configId, cause);
                         thing.op().data(rTopic, OpReply.reply(

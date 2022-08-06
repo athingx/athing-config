@@ -6,7 +6,7 @@ import io.github.athingx.athing.config.thing.impl.ThingConfigImpl;
 import io.github.athingx.athing.config.thing.impl.binding.BindingForPull;
 import io.github.athingx.athing.config.thing.impl.binding.BindingForPush;
 import io.github.athingx.athing.thing.api.Thing;
-import io.github.athingx.athing.thing.api.op.OpGroupBind;
+import io.github.athingx.athing.thing.api.op.OpGroupBinding;
 
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -52,14 +52,14 @@ public class ThingConfigBuilder {
      */
     public CompletableFuture<ThingConfig> build(Thing thing) {
 
-        final OpGroupBind group = thing.op().group();
+        final OpGroupBinding group = thing.op().binding();
         final Set<ConfigListener> listeners = ConcurrentHashMap.newKeySet();
         if (null != listener) {
             listeners.add(listener);
         }
 
-        group.binding(new BindingForPush(thing, option, listeners));
-        final var pullCallerFuture = group.binding(new BindingForPull(thing, option));
+        group.bindFor(new BindingForPush(thing, option, listeners));
+        final var pullCallerFuture = group.bindFor(new BindingForPull(thing, option));
         
         return group
                 .commit()

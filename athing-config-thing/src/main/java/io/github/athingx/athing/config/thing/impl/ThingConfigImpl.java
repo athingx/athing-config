@@ -6,7 +6,7 @@ import io.github.athingx.athing.config.thing.Scope;
 import io.github.athingx.athing.config.thing.ThingConfig;
 import io.github.athingx.athing.config.thing.impl.domain.Pull;
 import io.github.athingx.athing.thing.api.Thing;
-import io.github.athingx.athing.thing.api.op.OpCaller;
+import io.github.athingx.athing.thing.api.op.OpCall;
 import io.github.athingx.athing.thing.api.op.OpReply;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,14 +24,14 @@ public class ThingConfigImpl implements ThingConfig {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final Thing thing;
     private final Set<ConfigListener> listeners;
-    private final OpCaller<Pull, OpReply<Config>> pullCaller;
+    private final OpCall<Pull, OpReply<Config>> pullCall;
 
     public ThingConfigImpl(final Thing thing,
                            final Set<ConfigListener> listeners,
-                           final OpCaller<Pull, OpReply<Config>> pullCaller) {
+                           final OpCall<Pull, OpReply<Config>> pullCall) {
         this.thing = thing;
         this.listeners = listeners;
-        this.pullCaller = pullCaller;
+        this.pullCall = pullCall;
     }
 
     @Override
@@ -52,8 +52,8 @@ public class ThingConfigImpl implements ThingConfig {
 
     @Override
     public CompletableFuture<OpReply<Config>> fetch(Scope scope) {
-        return pullCaller
-                .call(
+        return pullCall
+                .calling(
                         "/sys/%s/thing/config/get".formatted(thing.path().toURN()),
                         new Pull(thing.op().genToken())
                 )
