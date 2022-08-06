@@ -8,7 +8,7 @@
     <packaging>pom</packaging>
     <version>${revision}</version>
     <name>athing-config</name>
-    <url>https://github.com/oldmanpushcart/athing-config</url>
+    <url>https://github.com/athingx/athing-config</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
