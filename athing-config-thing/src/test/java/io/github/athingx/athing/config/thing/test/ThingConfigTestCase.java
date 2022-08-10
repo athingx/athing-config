@@ -4,6 +4,7 @@ import io.github.athingx.athing.config.thing.Config;
 import io.github.athingx.athing.config.thing.ConfigListener;
 import io.github.athingx.athing.config.thing.Scope;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.concurrent.LinkedBlockingQueue;
@@ -50,6 +51,11 @@ public class ThingConfigTestCase extends ThingConfigSupport {
         }
     }
 
+
+    /**
+     * 用于手工执行
+     */
+    @Ignore
     @Test
     public void test$thing$config$push() throws Exception {
         final var queue = new LinkedBlockingQueue<Config>();
