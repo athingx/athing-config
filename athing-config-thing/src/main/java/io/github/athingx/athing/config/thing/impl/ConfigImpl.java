@@ -11,6 +11,7 @@ import io.github.athingx.athing.thing.api.Thing;
 import java.net.URL;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static io.github.athingx.athing.thing.api.function.CompletableFutureFn.tryCatchExecute;
 
@@ -19,14 +20,31 @@ import static io.github.athingx.athing.thing.api.function.CompletableFutureFn.tr
  */
 public class ConfigImpl implements Config {
 
+    private final Thing thing;
     private final Meta meta;
     private final Scope scope;
-    private final CompletableFuture<String> future;
+    private final ThingConfigOption option;
+    private final AtomicReference<CompletableFuture<String>> futureRef = new AtomicReference<>();
 
     public ConfigImpl(Thing thing, Meta meta, Scope scope, ThingConfigOption option) {
+        this.thing = thing;
         this.meta = meta;
         this.scope = scope;
-        this.future = tryCatchExecute(future -> thing.executor().execute(() -> {
+        this.option = option;
+    }
+
+    @Override
+    public String getConfigId() {
+        return meta.configId();
+    }
+
+    @Override
+    public Scope getScope() {
+        return scope;
+    }
+
+    private CompletableFuture<String> initFuture() {
+        return tryCatchExecute(future -> thing.executor().execute(() -> {
 
             try {
 
@@ -61,18 +79,19 @@ public class ConfigImpl implements Config {
     }
 
     @Override
-    public String getConfigId() {
-        return meta.configId();
-    }
-
-    @Override
-    public Scope getScope() {
-        return scope;
-    }
-
-    @Override
     public CompletableFuture<String> getContent() {
-        return future;
+        var future = futureRef.get();
+        if (null != future) {
+            return future;
+        }
+        synchronized (this) {
+            if (null != (future = futureRef.get())) {
+                return future;
+            }
+            futureRef.set(future = initFuture());
+            return future;
+        }
+
     }
 
 }
