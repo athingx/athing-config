@@ -52,11 +52,9 @@ public class ThingConfigImpl implements ThingConfig {
 
     @Override
     public CompletableFuture<OpReply<Config>> fetch(Scope scope) {
+        final var token = thing.op().genToken();
         return pullCall
-                .calling(
-                        "/sys/%s/thing/config/get".formatted(thing.path().toURN()),
-                        new Pull(thing.op().genToken())
-                )
+                .calling("/sys/%s/thing/config/get".formatted(thing.path().toURN()), new Pull(token))
                 .whenComplete(whenCompleted(
                         (v) -> logger.debug("{}/config/fetch success, scope={};config-id={};", thing.path(), scope, v.data().getConfigId()),
                         (ex) -> logger.warn("{}/config/fetch failure, scope={}", thing.path(), scope)

@@ -1,4 +1,4 @@
-package io.github.athingx.athing.config.thing.impl.binding;
+package io.github.athingx.athing.config.thing.impl.binder;
 
 import io.github.athingx.athing.config.thing.ConfigListener;
 import io.github.athingx.athing.config.thing.builder.ThingConfigOption;
@@ -7,7 +7,7 @@ import io.github.athingx.athing.config.thing.impl.ConfigImpl;
 import io.github.athingx.athing.config.thing.impl.domain.Push;
 import io.github.athingx.athing.thing.api.Thing;
 import io.github.athingx.athing.thing.api.op.OpBind;
-import io.github.athingx.athing.thing.api.op.OpGroupBindFor;
+import io.github.athingx.athing.thing.api.op.OpGroupBinder;
 import io.github.athingx.athing.thing.api.op.OpGroupBinding;
 import io.github.athingx.athing.thing.api.op.OpReply;
 import org.slf4j.Logger;
@@ -17,18 +17,18 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 import static io.github.athingx.athing.config.thing.Scope.PRODUCT;
-import static io.github.athingx.athing.thing.api.function.ThingFn.mappingJsonFromByte;
+import static io.github.athingx.athing.thing.api.function.ThingFn.mappingByteToJson;
 import static io.github.athingx.athing.thing.api.function.ThingFn.mappingJsonToType;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public class BindingForPush implements OpGroupBindFor<OpBind>, Codes {
+public class PushOpBinder implements OpGroupBinder<OpBind>, Codes {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final Thing thing;
     private final ThingConfigOption option;
     private final Set<ConfigListener> listeners;
 
-    public BindingForPush(Thing thing, ThingConfigOption option, Set<ConfigListener> listeners) {
+    public PushOpBinder(Thing thing, ThingConfigOption option, Set<ConfigListener> listeners) {
         this.thing = thing;
         this.option = option;
         this.listeners = listeners;
@@ -37,7 +37,7 @@ public class BindingForPush implements OpGroupBindFor<OpBind>, Codes {
     @Override
     public CompletableFuture<OpBind> bindFor(OpGroupBinding group) {
         return group.binding("/sys/%s/thing/config/push".formatted(thing.path().toURN()))
-                .map(mappingJsonFromByte(UTF_8))
+                .map(mappingByteToJson(UTF_8))
                 .map(mappingJsonToType(Push.class))
                 .bind((topic, push) -> {
 

@@ -3,12 +3,10 @@ package io.github.athingx.athing.config.thing.builder;
 import io.github.athingx.athing.config.thing.ConfigListener;
 import io.github.athingx.athing.config.thing.ThingConfig;
 import io.github.athingx.athing.config.thing.impl.ThingConfigImpl;
-import io.github.athingx.athing.config.thing.impl.binding.BindingForPull;
-import io.github.athingx.athing.config.thing.impl.binding.BindingForPush;
+import io.github.athingx.athing.config.thing.impl.binder.PullOpBinder;
+import io.github.athingx.athing.config.thing.impl.binder.PushOpBinder;
 import io.github.athingx.athing.thing.api.Thing;
-import io.github.athingx.athing.thing.api.op.OpGroupBinding;
 
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -52,21 +50,21 @@ public class ThingConfigBuilder {
      */
     public CompletableFuture<ThingConfig> build(Thing thing) {
 
-        final OpGroupBinding group = thing.op().binding();
-        final Set<ConfigListener> listeners = ConcurrentHashMap.newKeySet();
+        final var group = thing.op().binding();
+        final var listeners = ConcurrentHashMap.<ConfigListener>newKeySet();
         if (null != listener) {
             listeners.add(listener);
         }
 
-        group.bindFor(new BindingForPush(thing, option, listeners));
-        final var pullCallerFuture = group.bindFor(new BindingForPull(thing, option));
-        
+        group.bindFor(new PushOpBinder(thing, option, listeners));
+        final var pullCallFuture = group.bindFor(new PullOpBinder(thing, option));
+
         return group
                 .commit()
                 .thenCompose(binder -> tryCatchComplete(() -> new ThingConfigImpl(
                         thing,
                         listeners,
-                        pullCallerFuture.get()
+                        pullCallFuture.get()
                 )));
     }
 
