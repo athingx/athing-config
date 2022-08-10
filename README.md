@@ -1,2 +1,2 @@
 # athing-config
-athing远程配置
+远程配置
