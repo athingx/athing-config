@@ -10,6 +10,17 @@
     <name>athing-config</name>
     <url>https://github.com/athingx/athing-config</url>
 
+    <developers>
+        <developer>
+            <id>oldmanpushcart</id>
+            <organization>athingx</organization>
+            <organizationUrl>https://github.com/athingx</organizationUrl>
+            <name>oldmanpushcart</name>
+            <email>oldmanpushcart@gmail.com</email>
+            <timezone>+8</timezone>
+        </developer>
+    </developers>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <revision>1.0.0-SNAPSHOT</revision>
@@ -92,5 +103,19 @@
     <modules>
         <module>athing-config-thing</module>
     </modules>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/athingx/athing-config</url>
+        </repository>
+    </distributionManagement>
+
+    <repositories>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/athingx/athing</url>
+        </repository>
+    </repositories>
 
 </project>
