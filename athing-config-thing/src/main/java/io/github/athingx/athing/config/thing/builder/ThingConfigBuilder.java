@@ -50,16 +50,16 @@ public class ThingConfigBuilder {
      */
     public CompletableFuture<ThingConfig> build(Thing thing) {
 
-        final var group = thing.op().binding();
+        final var batch = thing.op().binding();
         final var listeners = ConcurrentHashMap.<ConfigListener>newKeySet();
         if (null != listener) {
             listeners.add(listener);
         }
 
-        group.bindFor(new PushOpBinder(thing, option, listeners));
-        final var pullCallFuture = group.bindFor(new PullOpBinder(thing, option));
+        new PushOpBinder(thing, option, listeners).bind(batch);
+        final var pullCallFuture = new PullOpBinder(thing, option).bind(batch);
 
-        return group
+        return batch
                 .commit()
                 .thenCompose(binder -> tryCatchComplete(() -> new ThingConfigImpl(
                         thing,

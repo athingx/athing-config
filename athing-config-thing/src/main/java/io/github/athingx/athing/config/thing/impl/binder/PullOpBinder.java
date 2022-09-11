@@ -6,9 +6,9 @@ import io.github.athingx.athing.config.thing.impl.ConfigImpl;
 import io.github.athingx.athing.config.thing.impl.domain.Meta;
 import io.github.athingx.athing.config.thing.impl.domain.Pull;
 import io.github.athingx.athing.thing.api.Thing;
+import io.github.athingx.athing.thing.api.op.OpBindable;
+import io.github.athingx.athing.thing.api.op.OpBinder;
 import io.github.athingx.athing.thing.api.op.OpCall;
-import io.github.athingx.athing.thing.api.op.OpGroupBinder;
-import io.github.athingx.athing.thing.api.op.OpGroupBinding;
 import io.github.athingx.athing.thing.api.op.OpReply;
 
 import java.util.concurrent.CompletableFuture;
@@ -17,7 +17,7 @@ import static io.github.athingx.athing.config.thing.Scope.PRODUCT;
 import static io.github.athingx.athing.thing.api.function.ThingFn.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public class PullOpBinder implements OpGroupBinder<OpCall<Pull, OpReply<Config>>> {
+public class PullOpBinder implements OpBinder<OpCall<Pull, OpReply<Config>>> {
 
     private final Thing thing;
     private final ThingConfigOption option;
@@ -28,8 +28,8 @@ public class PullOpBinder implements OpGroupBinder<OpCall<Pull, OpReply<Config>>
     }
 
     @Override
-    public CompletableFuture<OpCall<Pull, OpReply<Config>>> bindFor(OpGroupBinding group) {
-        return group.binding("/sys/%s/thing/config/get_reply".formatted(thing.path().toURN()))
+    public CompletableFuture<OpCall<Pull, OpReply<Config>>> bind(OpBindable bindable) {
+        return bindable.binding("/sys/%s/thing/config/get_reply".formatted(thing.path().toURN()))
                 .map(mappingByteToJson(UTF_8))
                 .map(mappingJsonToOpReply(Meta.class))
                 .map((topic, reply) -> OpReply.reply(
