@@ -1,36 +1,36 @@
 package io.github.athingx.athing.config.thing.test;
 
-import io.github.athingx.athing.config.thing.Config;
-import io.github.athingx.athing.config.thing.ConfigListener;
-import io.github.athingx.athing.config.thing.Scope;
+import io.github.athingx.athing.config.thing.ThingConfig;
+import io.github.athingx.athing.config.thing.ThingConfigListener;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class ThingConfigTestCase extends ThingConfigSupport {
+public class ThingConfiguratorTestCase extends ThingConfigSupport {
 
     @Test
     public void test$thing$config$fetch() throws Exception {
-        final var reply = thingConfig.fetch(Scope.PRODUCT).get();
+        final var reply = thingConfigurator.fetch(ThingConfig.Scope.PRODUCT).get();
         Assert.assertNotNull(reply);
-        Assert.assertTrue(reply.isOk());
+        Assert.assertTrue(reply.isSuccess());
         Assert.assertNotNull(reply.token());
         Assert.assertNotNull(reply.data());
-        final Config config = reply.data();
-        Assert.assertNotNull(config.getConfigId());
+        final ThingConfig config = reply.data();
+        Assert.assertNotNull(config.getId());
         final String content = config.getContent().get();
         Assert.assertNotNull(content);
+        Assert.assertFalse(content.isBlank());
     }
 
     @Test
     public void test$thing$config$update() throws Exception {
-        final var queue = new LinkedBlockingQueue<Config>();
-        final var listener = new ConfigListener() {
+        final var queue = new LinkedBlockingQueue<ThingConfig>();
+        final var listener = new ThingConfigListener() {
 
             @Override
-            public void apply(Config config) {
+            public void apply(ThingConfig config) {
                 while (true) {
                     if (queue.offer(config)) {
                         break;
@@ -39,15 +39,15 @@ public class ThingConfigTestCase extends ThingConfigSupport {
             }
         };
         try {
-            thingConfig.appendListener(listener);
-            thingConfig.update(Scope.PRODUCT).get();
-            final Config config = queue.take();
+            listeners.add(listener);
+            thingConfigurator.update(ThingConfig.Scope.PRODUCT).get();
+            final ThingConfig config = queue.take();
             Assert.assertNotNull(config);
-            Assert.assertNotNull(config.getConfigId());
+            Assert.assertNotNull(config.getId());
             final String content = config.getContent().get();
             Assert.assertNotNull(content);
         } finally {
-            thingConfig.removeListener(listener);
+            listeners.remove(listener);
         }
     }
 
@@ -58,11 +58,11 @@ public class ThingConfigTestCase extends ThingConfigSupport {
     @Ignore
     @Test
     public void test$thing$config$push() throws Exception {
-        final var queue = new LinkedBlockingQueue<Config>();
-        final var listener = new ConfigListener() {
+        final var queue = new LinkedBlockingQueue<ThingConfig>();
+        final var listener = new ThingConfigListener() {
 
             @Override
-            public void apply(Config config) {
+            public void apply(ThingConfig config) {
                 while (true) {
                     if (queue.offer(config)) {
                         break;
@@ -71,14 +71,14 @@ public class ThingConfigTestCase extends ThingConfigSupport {
             }
         };
         try {
-            thingConfig.appendListener(listener);
-            final Config config = queue.take();
+            listeners.add(listener);
+            final ThingConfig config = queue.take();
             Assert.assertNotNull(config);
-            Assert.assertNotNull(config.getConfigId());
+            Assert.assertNotNull(config.getId());
             final String content = config.getContent().get();
             Assert.assertNotNull(content);
         } finally {
-            thingConfig.removeListener(listener);
+            listeners.remove(listener);
         }
     }
 

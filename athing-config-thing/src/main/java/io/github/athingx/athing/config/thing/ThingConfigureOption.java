@@ -1,9 +1,9 @@
-package io.github.athingx.athing.config.thing.builder;
+package io.github.athingx.athing.config.thing;
 
 /**
  * 设备配置参数
  */
-public class ThingConfigOption {
+public class ThingConfigureOption {
 
     /**
      * 下载配置连接超时时间

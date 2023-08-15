@@ -1,64 +1,107 @@
 package io.github.athingx.athing.config.thing.impl;
 
-import io.github.athingx.athing.config.thing.Config;
-import io.github.athingx.athing.config.thing.ConfigListener;
-import io.github.athingx.athing.config.thing.Scope;
 import io.github.athingx.athing.config.thing.ThingConfig;
-import io.github.athingx.athing.config.thing.impl.domain.Pull;
+import io.github.athingx.athing.config.thing.ThingConfigureOption;
+import io.github.athingx.athing.config.thing.impl.domain.Meta;
+import io.github.athingx.athing.config.thing.impl.util.HttpUtils;
+import io.github.athingx.athing.config.thing.impl.util.StringUtils;
 import io.github.athingx.athing.thing.api.Thing;
-import io.github.athingx.athing.thing.api.op.OpCall;
-import io.github.athingx.athing.thing.api.op.OpReply;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.Set;
+import java.net.URL;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicReference;
 
-import static io.github.athingx.athing.thing.api.function.CompletableFutureFn.whenCompleted;
+import static java.util.Optional.ofNullable;
 
 /**
- * 设备配置实现
+ * 配置实现
  */
 public class ThingConfigImpl implements ThingConfig {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
     private final Thing thing;
-    private final Set<ConfigListener> listeners;
-    private final OpCall<Pull, OpReply<Config>> pullCall;
+    private final Meta meta;
+    private final Scope scope;
+    private final ThingConfigureOption option;
+    private final AtomicReference<CompletableFuture<String>> futureRef = new AtomicReference<>();
 
-    public ThingConfigImpl(final Thing thing,
-                           final Set<ConfigListener> listeners,
-                           final OpCall<Pull, OpReply<Config>> pullCall) {
+    public ThingConfigImpl(Thing thing, ThingConfigureOption option, Scope scope, Meta meta) {
         this.thing = thing;
-        this.listeners = listeners;
-        this.pullCall = pullCall;
+        this.meta = meta;
+        this.scope = scope;
+        this.option = option;
     }
 
     @Override
-    public void appendListener(ConfigListener listener) {
-        listeners.add(listener);
+    public String getId() {
+        return meta.id();
     }
 
     @Override
-    public void removeListener(ConfigListener listener) {
-        listeners.remove(listener);
+    public Scope getScope() {
+        return scope;
+    }
+
+    private static class FetchContentException extends RuntimeException {
+
+        public FetchContentException(String message, Throwable cause) {
+            super(message, cause);
+        }
+
+        public FetchContentException(String message) {
+            super(message);
+        }
+
+    }
+
+    private CompletableFuture<String> asyncFetchContent() {
+        return CompletableFuture.supplyAsync(() -> {
+
+            try {
+
+                // 获取配置文件内容
+                final var content = HttpUtils.getAsString(
+                        new URL(meta.url()),
+                        option.getConnectTimeoutMs(),
+                        option.getTimeoutMs()
+                );
+
+                // 校验获取的配置文件内容
+                final var expect = meta.sign().toUpperCase();
+                final var actual = StringUtils.signBySHA256(content).toUpperCase();
+                if (!Objects.equals(expect, actual)) {
+                    throw new FetchContentException("config: %s checksum failure, expect: %s but actual: %s".formatted(
+                            getId(),
+                            expect,
+                            actual
+                    ));
+                }
+
+                return content;
+
+            } catch (FetchContentException cause) {
+                throw cause;
+            } catch (Exception cause) {
+                throw new FetchContentException("config: %s download occur error!".formatted(getId()), cause);
+            }
+
+        }, thing.executor());
     }
 
     @Override
-    public CompletableFuture<Void> update(Scope scope) {
-        return fetch(scope)
-                .thenAccept(reply -> listeners.forEach(listener -> listener.apply(reply.data())));
-    }
+    public CompletableFuture<String> getContent() {
+        return ofNullable(futureRef.get())
+                .orElseGet(() -> {
+                    synchronized (this) {
+                        return ofNullable(futureRef.get())
+                                .orElseGet(() -> {
+                                    final var future = asyncFetchContent();
+                                    futureRef.set(future);
+                                    return future;
+                                });
+                    }
+                });
 
-    @Override
-    public CompletableFuture<OpReply<Config>> fetch(Scope scope) {
-        final var token = thing.op().genToken();
-        return pullCall
-                .calling("/sys/%s/thing/config/get".formatted(thing.path().toURN()), new Pull(token))
-                .whenComplete(whenCompleted(
-                        (v) -> logger.debug("{}/config/fetch success, scope={};config-id={};", thing.path(), scope, v.data().getConfigId()),
-                        (ex) -> logger.warn("{}/config/fetch failure, scope={}", thing.path(), scope)
-                ));
     }
 
 }

@@ -6,9 +6,9 @@ import com.google.gson.annotations.SerializedName;
  * 配置元数据
  */
 public record Meta(
-        @SerializedName("configId") String configId,
-        @SerializedName("sign") String configCHS,
-        @SerializedName("url") String configURL
+        @SerializedName("configId") String id,
+        @SerializedName("sign") String sign,
+        @SerializedName("url") String url
 ) {
 
 }

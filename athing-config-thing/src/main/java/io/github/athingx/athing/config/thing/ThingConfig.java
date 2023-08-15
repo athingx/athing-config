@@ -1,41 +1,43 @@
 package io.github.athingx.athing.config.thing;
 
-import io.github.athingx.athing.thing.api.op.OpReply;
-
 import java.util.concurrent.CompletableFuture;
 
 /**
- * 设备配置
+ * 配置
  */
 public interface ThingConfig {
 
     /**
-     * 添加监听器
+     * 获取配置ID
      *
-     * @param listener 配置监听器
+     * @return 配置ID
      */
-    void appendListener(ConfigListener listener);
+    String getId();
 
     /**
-     * 移除监听器
+     * 获取配置范围
      *
-     * @param listener 配置监听器
+     * @return 配置范围
      */
-    void removeListener(ConfigListener listener);
+    Scope getScope();
 
     /**
-     * 更新最新配置
+     * 获取配置内容
      *
-     * @param scope 配置范围
+     * @return 获取凭证
      */
-    CompletableFuture<Void> update(Scope scope);
+    CompletableFuture<String> getContent();
 
     /**
-     * 拉取最新配置
-     *
-     * @param scope 配置范围
-     * @return 拉取操作
+     * 配置范围
      */
-    CompletableFuture<OpReply<Config>> fetch(Scope scope);
+    enum Scope {
+
+        /**
+         * 产品级
+         */
+        PRODUCT
+
+    }
 
 }
