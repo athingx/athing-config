@@ -5,6 +5,7 @@ import io.github.athingx.athing.config.thing.impl.binding.OpBindingThingConfigPu
 import io.github.athingx.athing.config.thing.impl.binding.OpBindingThingConfigPusher;
 import io.github.athingx.athing.thing.api.Thing;
 
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -44,6 +45,8 @@ public class ThingConfigureBuilder {
      * @return 设备配置
      */
     public CompletableFuture<ThingConfigurator> build(Thing thing) {
+        Objects.requireNonNull(option, "option is required!");
+        Objects.requireNonNull(listener, "listener is required!");
         final var puller = new OpBindingThingConfigPuller(option).bind(thing);
         final var pusher = new OpBindingThingConfigPusher(option, listener).bind(thing);
         return CompletableFuture.allOf(puller, pusher)

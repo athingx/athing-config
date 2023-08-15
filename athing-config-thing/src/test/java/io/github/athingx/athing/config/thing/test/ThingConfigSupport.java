@@ -1,6 +1,5 @@
 package io.github.athingx.athing.config.thing.test;
 
-import io.github.athingx.athing.config.thing.ThingConfig;
 import io.github.athingx.athing.config.thing.ThingConfigListener;
 import io.github.athingx.athing.config.thing.ThingConfigurator;
 import io.github.athingx.athing.config.thing.ThingConfigureBuilder;
@@ -31,12 +30,7 @@ public class ThingConfigSupport implements LoadingProperties {
                 .build();
 
         thingConfigurator = new ThingConfigureBuilder()
-                .listener(new ThingConfigListener() {
-                    @Override
-                    public void apply(ThingConfig config) {
-                        listeners.forEach(listener -> listener.apply(config));
-                    }
-                })
+                .listener(config -> listeners.forEach(listener -> listener.apply(config)))
                 .build(thing)
                 .get();
 

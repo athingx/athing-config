@@ -22,6 +22,7 @@ public class ThingConfiguratorTestCase extends ThingConfigSupport {
         final String content = config.getContent().get();
         Assert.assertNotNull(content);
         Assert.assertFalse(content.isBlank());
+        Assert.assertEquals(ThingConfig.Scope.PRODUCT, config.getScope());
     }
 
     @Test

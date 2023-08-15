@@ -6,8 +6,6 @@ import io.github.athingx.athing.config.thing.ThingConfigurator;
 import io.github.athingx.athing.config.thing.impl.domain.Pull;
 import io.github.athingx.athing.thing.api.op.OpReply;
 import io.github.athingx.athing.thing.api.op.ThingOpCaller;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -16,7 +14,6 @@ import java.util.concurrent.CompletableFuture;
  */
 public class ThingConfiguratorImpl implements ThingConfigurator {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
     private final ThingConfigListener listener;
 
     private final ThingOpCaller<Pull, OpReply<ThingConfig>> puller;
