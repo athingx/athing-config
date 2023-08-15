@@ -5,8 +5,6 @@ import io.github.athingx.athing.config.thing.impl.binding.OpBindingThingConfigPu
 import io.github.athingx.athing.config.thing.impl.binding.OpBindingThingConfigPusher;
 import io.github.athingx.athing.thing.api.Thing;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 /**
