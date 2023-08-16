@@ -25,12 +25,17 @@ public class ThingConfiguratorImpl implements ThingConfigurator {
 
     @Override
     public CompletableFuture<Void> update(ThingConfig.Scope scope) {
-        return fetch(scope).thenAccept(listener::apply);
+        return fetch(scope).thenAccept(this::apply);
     }
 
     @Override
     public CompletableFuture<ThingConfig> fetch(ThingConfig.Scope scope) {
         return puller.call(new Pull(scope));
+    }
+
+    @Override
+    public void apply(ThingConfig config) {
+        listener.apply(config);
     }
 
 }

@@ -22,4 +22,11 @@ public interface ThingConfigurator {
      */
     CompletableFuture<ThingConfig> fetch(ThingConfig.Scope scope);
 
+    /**
+     * 应用配置
+     *
+     * @param config 配置
+     */
+    void apply(ThingConfig config);
+
 }
