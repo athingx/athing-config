@@ -12,12 +12,8 @@ public class ThingConfiguratorTestCase extends ThingConfigSupport {
 
     @Test
     public void test$thing$config$fetch() throws Exception {
-        final var reply = thingConfigurator.fetch(ThingConfig.Scope.PRODUCT).get();
-        Assert.assertNotNull(reply);
-        Assert.assertTrue(reply.isSuccess());
-        Assert.assertNotNull(reply.token());
-        Assert.assertNotNull(reply.data());
-        final ThingConfig config = reply.data();
+        final var config = thingConfigurator.fetch(ThingConfig.Scope.PRODUCT).get();
+        Assert.assertNotNull(config);
         Assert.assertNotNull(config.getId());
         final String content = config.getContent().get();
         Assert.assertNotNull(content);

@@ -1,7 +1,5 @@
 package io.github.athingx.athing.config.thing;
 
-import io.github.athingx.athing.thing.api.op.OpReply;
-
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -22,6 +20,6 @@ public interface ThingConfigurator {
      * @param scope 配置范围
      * @return 拉取操作
      */
-    CompletableFuture<OpReply<ThingConfig>> fetch(ThingConfig.Scope scope);
+    CompletableFuture<ThingConfig> fetch(ThingConfig.Scope scope);
 
 }
