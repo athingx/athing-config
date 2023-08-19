@@ -34,14 +34,10 @@ public class OpBindingThingConfigPuller implements OpBinding<ThingOpCaller<Pull,
                 .map(mappingJsonToOpReply(Meta.class))
                 .caller(new ThingOpBind.Option(), OpFunction.identity())
                 .thenApply(caller -> caller
-                        .<Pull>compose((topic, pull) -> new OpRequest<>(thing.op().genToken(), "thing.config.get", pull))
-                        .<ThingConfig>then((topic, reply) -> {
-                            if (!reply.isSuccess()) {
-                                throw new OpReplyException(reply.token(), reply.code(), reply.desc());
-                            }
-                            return new ThingConfigImpl(thing, option, PRODUCT, reply.data());
-                        })
                         .route(pull -> "/sys/%s/thing/config/get".formatted(thing.path().toURN()))
+                        .<Pull>compose(pull -> new OpRequest<>(thing.op().genToken(), "thing.config.get", pull))
+                        .then(reply -> reply.handle(data -> new ThingConfigImpl(thing, option, PRODUCT, data)))
+
                 );
     }
 

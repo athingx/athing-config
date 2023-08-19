@@ -63,9 +63,9 @@ public class OpBindingThingConfigPusher implements OpBinding<ThingOpBinder> {
 
                         final OpReply<?> reply;
                         if (cause instanceof OpReplyException orCause) {
-                            reply = OpReply.failure(orCause);
+                            reply = OpReply.fail(orCause);
                         } else {
-                            reply = OpReply.failure(token, REQUEST_ERROR, cause.getLocalizedMessage());
+                            reply = OpReply.fail(token, REQUEST_ERROR, cause.getLocalizedMessage());
                         }
 
                         // 回复配置变更失败
