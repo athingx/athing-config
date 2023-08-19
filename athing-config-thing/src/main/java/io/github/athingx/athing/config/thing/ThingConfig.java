@@ -3,41 +3,30 @@ package io.github.athingx.athing.config.thing;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * 配置
+ * 设备配置
  */
 public interface ThingConfig {
 
     /**
-     * 获取配置ID
+     * 更新最新配置
      *
-     * @return 配置ID
+     * @param scope 配置范围
      */
-    String getId();
+    CompletableFuture<Void> update(Config.Scope scope);
 
     /**
-     * 获取配置范围
+     * 拉取最新配置
      *
-     * @return 配置范围
+     * @param scope 配置范围
+     * @return 拉取操作
      */
-    Scope getScope();
+    CompletableFuture<Config> fetch(Config.Scope scope);
 
     /**
-     * 获取配置内容
+     * 应用配置
      *
-     * @return 获取凭证
+     * @param config 配置
      */
-    CompletableFuture<String> getContent();
-
-    /**
-     * 配置范围
-     */
-    enum Scope {
-
-        /**
-         * 产品级
-         */
-        PRODUCT
-
-    }
+    void apply(Config config);
 
 }

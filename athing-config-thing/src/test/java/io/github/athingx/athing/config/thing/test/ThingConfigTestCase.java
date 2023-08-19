@@ -1,33 +1,33 @@
 package io.github.athingx.athing.config.thing.test;
 
-import io.github.athingx.athing.config.thing.ThingConfig;
-import io.github.athingx.athing.config.thing.ThingConfigListener;
+import io.github.athingx.athing.config.thing.Config;
+import io.github.athingx.athing.config.thing.ConfigListener;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class ThingConfiguratorTestCase extends ThingConfigSupport {
+public class ThingConfigTestCase extends ThingConfigSupport {
 
     @Test
     public void test$thing$config$fetch() throws Exception {
-        final var config = thingConfigurator.fetch(ThingConfig.Scope.PRODUCT).get();
+        final var config = thingConfig.fetch(Config.Scope.PRODUCT).get();
         Assert.assertNotNull(config);
         Assert.assertNotNull(config.getId());
         final String content = config.getContent().get();
         Assert.assertNotNull(content);
         Assert.assertFalse(content.isBlank());
-        Assert.assertEquals(ThingConfig.Scope.PRODUCT, config.getScope());
+        Assert.assertEquals(Config.Scope.PRODUCT, config.getScope());
     }
 
     @Test
     public void test$thing$config$update() throws Exception {
-        final var queue = new LinkedBlockingQueue<ThingConfig>();
-        final var listener = new ThingConfigListener() {
+        final var queue = new LinkedBlockingQueue<Config>();
+        final var listener = new ConfigListener() {
 
             @Override
-            public void apply(ThingConfig config) {
+            public void apply(Config config) {
                 while (true) {
                     if (queue.offer(config)) {
                         break;
@@ -37,8 +37,8 @@ public class ThingConfiguratorTestCase extends ThingConfigSupport {
         };
         try {
             listeners.add(listener);
-            thingConfigurator.update(ThingConfig.Scope.PRODUCT).get();
-            final ThingConfig config = queue.take();
+            thingConfig.update(Config.Scope.PRODUCT).get();
+            final Config config = queue.take();
             Assert.assertNotNull(config);
             Assert.assertNotNull(config.getId());
             final String content = config.getContent().get();
@@ -55,11 +55,11 @@ public class ThingConfiguratorTestCase extends ThingConfigSupport {
     @Ignore
     @Test
     public void test$thing$config$push() throws Exception {
-        final var queue = new LinkedBlockingQueue<ThingConfig>();
-        final var listener = new ThingConfigListener() {
+        final var queue = new LinkedBlockingQueue<Config>();
+        final var listener = new ConfigListener() {
 
             @Override
-            public void apply(ThingConfig config) {
+            public void apply(Config config) {
                 while (true) {
                     if (queue.offer(config)) {
                         break;
@@ -69,7 +69,7 @@ public class ThingConfiguratorTestCase extends ThingConfigSupport {
         };
         try {
             listeners.add(listener);
-            final ThingConfig config = queue.take();
+            final Config config = queue.take();
             Assert.assertNotNull(config);
             Assert.assertNotNull(config.getId());
             final String content = config.getContent().get();

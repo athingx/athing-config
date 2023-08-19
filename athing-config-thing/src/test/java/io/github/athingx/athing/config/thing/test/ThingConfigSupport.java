@@ -1,8 +1,8 @@
 package io.github.athingx.athing.config.thing.test;
 
-import io.github.athingx.athing.config.thing.ThingConfigListener;
-import io.github.athingx.athing.config.thing.ThingConfigurator;
-import io.github.athingx.athing.config.thing.ThingConfigureBuilder;
+import io.github.athingx.athing.config.thing.ConfigListener;
+import io.github.athingx.athing.config.thing.ThingConfig;
+import io.github.athingx.athing.config.thing.ThingConfigBuilder;
 import io.github.athingx.athing.thing.api.Thing;
 import io.github.athingx.athing.thing.api.ThingPath;
 import io.github.athingx.athing.thing.builder.ThingBuilder;
@@ -16,9 +16,9 @@ import java.util.Set;
 public class ThingConfigSupport implements LoadingProperties {
 
     protected static volatile Thing thing;
-    protected static volatile ThingConfigurator thingConfigurator;
+    protected static volatile ThingConfig thingConfig;
 
-    protected static final Set<ThingConfigListener> listeners = new LinkedHashSet<>();
+    protected static final Set<ConfigListener> listeners = new LinkedHashSet<>();
 
     @BeforeClass
     public static void _before() throws Exception {
@@ -29,7 +29,7 @@ public class ThingConfigSupport implements LoadingProperties {
                         .secret(THING_SECRET))
                 .build();
 
-        thingConfigurator = new ThingConfigureBuilder()
+        thingConfig = new ThingConfigBuilder()
                 .listener(config -> listeners.forEach(listener -> listener.apply(config)))
                 .build(thing)
                 .get();

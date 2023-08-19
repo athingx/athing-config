@@ -1,8 +1,8 @@
 package io.github.athingx.athing.config.thing.impl.binding;
 
-import io.github.athingx.athing.config.thing.ThingConfigListener;
-import io.github.athingx.athing.config.thing.ThingConfigureOption;
-import io.github.athingx.athing.config.thing.impl.ThingConfigImpl;
+import io.github.athingx.athing.config.thing.ConfigListener;
+import io.github.athingx.athing.config.thing.ThingConfigOption;
+import io.github.athingx.athing.config.thing.impl.ConfigImpl;
 import io.github.athingx.athing.config.thing.impl.domain.Meta;
 import io.github.athingx.athing.thing.api.Thing;
 import io.github.athingx.athing.thing.api.op.OpReply;
@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.CompletableFuture;
 
 import static io.github.athingx.athing.common.ThingCodes.REQUEST_ERROR;
-import static io.github.athingx.athing.config.thing.ThingConfig.Scope.PRODUCT;
+import static io.github.athingx.athing.config.thing.Config.Scope.PRODUCT;
 import static io.github.athingx.athing.thing.api.op.function.OpMapper.mappingBytesToJson;
 import static io.github.athingx.athing.thing.api.op.function.OpMapper.mappingJsonToOpRequest;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -22,10 +22,10 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class OpBindingThingConfigPusher implements OpBinding<ThingOpBinder> {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
-    private final ThingConfigureOption option;
-    private final ThingConfigListener listener;
+    private final ThingConfigOption option;
+    private final ConfigListener listener;
 
-    public OpBindingThingConfigPusher(ThingConfigureOption option, ThingConfigListener listener) {
+    public OpBindingThingConfigPusher(ThingConfigOption option, ConfigListener listener) {
         this.option = option;
         this.listener = listener;
     }
@@ -46,7 +46,7 @@ public class OpBindingThingConfigPusher implements OpBinding<ThingOpBinder> {
                     try {
 
                         // 对配置变更监听器进行通知，如果任何一个监听器失败，则配置变更失败
-                        final var config = new ThingConfigImpl(thing, option, PRODUCT, meta);
+                        final var config = new ConfigImpl(thing, option, PRODUCT, meta);
                         listener.apply(config);
                         logger.debug("{}/config/push apply success, token={};config-id={};", path, token, meta.id());
 

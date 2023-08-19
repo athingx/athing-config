@@ -3,7 +3,7 @@ package io.github.athingx.athing.config.thing;
 /**
  * 设备配置参数
  */
-public class ThingConfigureOption {
+public class ThingConfigOption {
 
     /**
      * 下载配置连接超时时间

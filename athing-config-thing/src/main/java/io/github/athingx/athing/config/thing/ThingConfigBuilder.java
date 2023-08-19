@@ -1,6 +1,6 @@
 package io.github.athingx.athing.config.thing;
 
-import io.github.athingx.athing.config.thing.impl.ThingConfiguratorImpl;
+import io.github.athingx.athing.config.thing.impl.ThingConfigImpl;
 import io.github.athingx.athing.config.thing.impl.binding.OpBindingThingConfigPuller;
 import io.github.athingx.athing.config.thing.impl.binding.OpBindingThingConfigPusher;
 import io.github.athingx.athing.thing.api.Thing;
@@ -11,10 +11,10 @@ import java.util.concurrent.CompletableFuture;
 /**
  * 设备配置构造
  */
-public class ThingConfigureBuilder {
+public class ThingConfigBuilder {
 
-    private ThingConfigureOption option = new ThingConfigureOption();
-    private ThingConfigListener listener;
+    private ThingConfigOption option = new ThingConfigOption();
+    private ConfigListener listener;
 
     /**
      * 设备配置参数
@@ -22,7 +22,7 @@ public class ThingConfigureBuilder {
      * @param option 设备配置参数
      * @return this
      */
-    public ThingConfigureBuilder option(ThingConfigureOption option) {
+    public ThingConfigBuilder option(ThingConfigOption option) {
         this.option = option;
         return this;
     }
@@ -33,7 +33,7 @@ public class ThingConfigureBuilder {
      * @param listener 设备配置监听器
      * @return this
      */
-    public ThingConfigureBuilder listener(ThingConfigListener listener) {
+    public ThingConfigBuilder listener(ConfigListener listener) {
         this.listener = listener;
         return this;
     }
@@ -44,13 +44,13 @@ public class ThingConfigureBuilder {
      * @param thing 设备
      * @return 设备配置
      */
-    public CompletableFuture<ThingConfigurator> build(Thing thing) {
+    public CompletableFuture<ThingConfig> build(Thing thing) {
         Objects.requireNonNull(option, "option is required!");
         Objects.requireNonNull(listener, "listener is required!");
         final var puller = new OpBindingThingConfigPuller(option).bind(thing);
         final var pusher = new OpBindingThingConfigPusher(option, listener).bind(thing);
         return CompletableFuture.allOf(puller, pusher)
-                .thenApply(v -> new ThingConfiguratorImpl(
+                .thenApply(v -> new ThingConfigImpl(
                         listener,
                         puller.join()
                 ));
