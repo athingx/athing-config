@@ -6,7 +6,6 @@ import io.github.athingx.athing.config.thing.impl.ThingConfigImpl;
 import io.github.athingx.athing.config.thing.impl.domain.Meta;
 import io.github.athingx.athing.config.thing.impl.domain.Pull;
 import io.github.athingx.athing.thing.api.Thing;
-import io.github.athingx.athing.thing.api.op.OpReplyException;
 import io.github.athingx.athing.thing.api.op.OpRequest;
 import io.github.athingx.athing.thing.api.op.ThingOpBind;
 import io.github.athingx.athing.thing.api.op.ThingOpCaller;
