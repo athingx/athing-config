@@ -2,7 +2,7 @@ package io.github.athingx.athing.config.thing.test;
 
 import io.github.athingx.athing.config.thing.ConfigListener;
 import io.github.athingx.athing.config.thing.ThingConfig;
-import io.github.athingx.athing.config.thing.ThingConfigBuilder;
+import io.github.athingx.athing.config.thing.ThingConfigInstaller;
 import io.github.athingx.athing.thing.api.Thing;
 import io.github.athingx.athing.thing.api.ThingPath;
 import io.github.athingx.athing.thing.builder.ThingBuilder;
@@ -29,9 +29,9 @@ public class ThingConfigSupport implements LoadingProperties {
                         .secret(THING_SECRET))
                 .build();
 
-        thingConfig = new ThingConfigBuilder()
-                .listener(config -> listeners.forEach(listener -> listener.apply(config)))
-                .build(thing)
+        thingConfig = thing.install(new ThingConfigInstaller()
+                        .listener(config -> listeners.forEach(listener -> listener.apply(config)))
+                )
                 .get();
 
     }

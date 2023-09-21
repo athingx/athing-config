@@ -1,11 +1,15 @@
 package io.github.athingx.athing.config.thing;
 
+import io.github.athingx.athing.thing.api.plugin.ThingPlugin;
+
 import java.util.concurrent.CompletableFuture;
 
 /**
  * 设备配置
  */
-public interface ThingConfig {
+public interface ThingConfig extends ThingPlugin {
+
+    String THING_CONFIG_ID = "athingx.thing.config";
 
     /**
      * 更新最新配置

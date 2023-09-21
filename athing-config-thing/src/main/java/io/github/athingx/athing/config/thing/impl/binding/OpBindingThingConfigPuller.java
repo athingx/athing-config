@@ -31,7 +31,7 @@ public class OpBindingThingConfigPuller implements OpBinding<ThingOpCaller<Pull,
         return thing.op().bind("/sys/%s/thing/config/get_reply".formatted(thing.path().toURN()))
                 .map(mappingBytesToJson(UTF_8))
                 .map(mappingJsonToOpReply(Meta.class))
-                .caller(new ThingOpBind.Option(), OpFunction.identity())
+                .caller(OpFunction.identity())
                 .thenApply(caller -> caller
                         .route(pull -> "/sys/%s/thing/config/get".formatted(thing.path().toURN()))
                         .<Pull>compose(pull -> new OpRequest<>(thing.op().genToken(), "thing.config.get", pull))

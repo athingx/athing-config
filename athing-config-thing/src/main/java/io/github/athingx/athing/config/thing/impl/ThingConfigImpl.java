@@ -4,6 +4,7 @@ import io.github.athingx.athing.config.thing.Config;
 import io.github.athingx.athing.config.thing.ConfigListener;
 import io.github.athingx.athing.config.thing.ThingConfig;
 import io.github.athingx.athing.config.thing.impl.domain.Pull;
+import io.github.athingx.athing.thing.api.op.ThingOpBinder;
 import io.github.athingx.athing.thing.api.op.ThingOpCaller;
 
 import java.util.concurrent.CompletableFuture;
@@ -16,11 +17,14 @@ public class ThingConfigImpl implements ThingConfig {
     private final ConfigListener listener;
 
     private final ThingOpCaller<Pull, Config> puller;
+    private final ThingOpBinder pusher;
 
     public ThingConfigImpl(final ConfigListener listener,
-                           final ThingOpCaller<Pull, Config> puller) {
+                           final ThingOpCaller<Pull, Config> puller,
+                           final ThingOpBinder pusher) {
         this.listener = listener;
         this.puller = puller;
+        this.pusher = pusher;
     }
 
     @Override
@@ -38,4 +42,11 @@ public class ThingConfigImpl implements ThingConfig {
         listener.apply(config);
     }
 
+    @Override
+    public CompletableFuture<Void> uninstall() {
+        return CompletableFuture.allOf(
+                puller.unbind(),
+                pusher.unbind()
+        );
+    }
 }
