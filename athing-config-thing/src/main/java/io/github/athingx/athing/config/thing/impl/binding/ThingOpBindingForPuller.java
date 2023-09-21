@@ -7,7 +7,7 @@ import io.github.athingx.athing.config.thing.impl.domain.Meta;
 import io.github.athingx.athing.config.thing.impl.domain.Pull;
 import io.github.athingx.athing.thing.api.Thing;
 import io.github.athingx.athing.thing.api.op.OpRequest;
-import io.github.athingx.athing.thing.api.op.ThingOpBind;
+import io.github.athingx.athing.thing.api.op.ThingOpBinding;
 import io.github.athingx.athing.thing.api.op.ThingOpCaller;
 import io.github.athingx.athing.thing.api.op.function.OpFunction;
 
@@ -18,11 +18,11 @@ import static io.github.athingx.athing.thing.api.op.function.OpMapper.mappingByt
 import static io.github.athingx.athing.thing.api.op.function.OpMapper.mappingJsonToOpReply;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public class OpBindingThingConfigPuller implements OpBinding<ThingOpCaller<Pull, Config>> {
+public class ThingOpBindingForPuller implements ThingOpBinding<ThingOpCaller<Pull, Config>> {
 
     private final ThingConfigOption option;
 
-    public OpBindingThingConfigPuller(ThingConfigOption option) {
+    public ThingOpBindingForPuller(ThingConfigOption option) {
         this.option = option;
     }
 

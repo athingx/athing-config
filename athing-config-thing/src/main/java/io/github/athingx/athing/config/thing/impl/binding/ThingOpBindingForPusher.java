@@ -8,6 +8,7 @@ import io.github.athingx.athing.thing.api.Thing;
 import io.github.athingx.athing.thing.api.op.OpReply;
 import io.github.athingx.athing.thing.api.op.OpReplyException;
 import io.github.athingx.athing.thing.api.op.ThingOpBinder;
+import io.github.athingx.athing.thing.api.op.ThingOpBinding;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,13 +20,13 @@ import static io.github.athingx.athing.thing.api.op.function.OpMapper.mappingByt
 import static io.github.athingx.athing.thing.api.op.function.OpMapper.mappingJsonToOpRequest;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public class OpBindingThingConfigPusher implements OpBinding<ThingOpBinder> {
+public class ThingOpBindingForPusher implements ThingOpBinding<ThingOpBinder> {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final ThingConfigOption option;
     private final ConfigListener listener;
 
-    public OpBindingThingConfigPusher(ThingConfigOption option, ConfigListener listener) {
+    public ThingOpBindingForPusher(ThingConfigOption option, ConfigListener listener) {
         this.option = option;
         this.listener = listener;
     }
