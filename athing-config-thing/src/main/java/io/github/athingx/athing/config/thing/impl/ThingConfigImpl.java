@@ -4,8 +4,8 @@ import io.github.athingx.athing.config.thing.Config;
 import io.github.athingx.athing.config.thing.ConfigListener;
 import io.github.athingx.athing.config.thing.ThingConfig;
 import io.github.athingx.athing.config.thing.impl.domain.Pull;
+import io.github.athingx.athing.thing.api.op.OpBinder;
 import io.github.athingx.athing.thing.api.op.OpCaller;
-import io.github.athingx.athing.thing.api.op.OpConsumer;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -17,11 +17,11 @@ public class ThingConfigImpl implements ThingConfig {
     private final ConfigListener listener;
 
     private final OpCaller<Pull, Config> puller;
-    private final OpConsumer pusher;
+    private final OpBinder pusher;
 
     public ThingConfigImpl(final ConfigListener listener,
                            final OpCaller<Pull, Config> puller,
-                           final OpConsumer pusher) {
+                           final OpBinder pusher) {
         this.listener = listener;
         this.puller = puller;
         this.pusher = pusher;

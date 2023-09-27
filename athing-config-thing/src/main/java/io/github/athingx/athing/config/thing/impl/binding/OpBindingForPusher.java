@@ -5,10 +5,7 @@ import io.github.athingx.athing.config.thing.ThingConfigOption;
 import io.github.athingx.athing.config.thing.impl.ConfigImpl;
 import io.github.athingx.athing.config.thing.impl.domain.Meta;
 import io.github.athingx.athing.thing.api.Thing;
-import io.github.athingx.athing.thing.api.op.OpBinding;
-import io.github.athingx.athing.thing.api.op.OpConsumer;
-import io.github.athingx.athing.thing.api.op.OpReply;
-import io.github.athingx.athing.thing.api.op.OpReplyException;
+import io.github.athingx.athing.thing.api.op.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +18,7 @@ import static io.github.athingx.athing.thing.api.op.Codec.codecBytesToJson;
 import static io.github.athingx.athing.thing.api.op.Codec.codecJsonToOpServices;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public class OpBindingForPusher implements OpBinding<OpConsumer> {
+public class OpBindingForPusher implements OpBinding<OpBinder> {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final ThingConfigOption option;
@@ -33,7 +30,7 @@ public class OpBindingForPusher implements OpBinding<OpConsumer> {
     }
 
     @Override
-    public CompletableFuture<OpConsumer> bind(Thing thing) {
+    public CompletableFuture<OpBinder> bind(Thing thing) {
 
         return thing.op()
                 .codec(codecBytesToJson(UTF_8))
