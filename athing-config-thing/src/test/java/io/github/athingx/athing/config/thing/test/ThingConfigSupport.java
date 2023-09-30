@@ -29,9 +29,12 @@ public class ThingConfigSupport implements LoadingProperties {
                         .secret(THING_SECRET))
                 .build();
 
-        thingConfig = thing.install(new ThingConfigInstaller()
+        thing.plugins().install(
+                new ThingConfigInstaller()
                         .listener(config -> listeners.forEach(listener -> listener.apply(config)))
-                )
+        );
+
+        thingConfig = thing.plugins().depends(ThingConfig.THING_CONFIG_ID, ThingConfig.class)
                 .get();
 
     }
