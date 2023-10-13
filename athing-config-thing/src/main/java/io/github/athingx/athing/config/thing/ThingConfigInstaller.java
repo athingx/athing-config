@@ -26,7 +26,7 @@ public class ThingConfigInstaller implements ThingPluginInstaller<ThingConfig> {
 
     @Override
     public Meta<ThingConfig> meta() {
-        return new Meta<>(ThingConfig.THING_CONFIG_ID, ThingConfig.class);
+        return new Meta<>(ThingConfig.PLUGIN_ID, ThingConfig.class);
     }
 
     @Override

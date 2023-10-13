@@ -9,7 +9,7 @@ import java.util.concurrent.CompletableFuture;
  */
 public interface ThingConfig extends ThingPlugin {
 
-    String THING_CONFIG_ID = "athingx.thing.config";
+    String PLUGIN_ID = "athingx.thing.config";
 
     /**
      * 更新最新配置
